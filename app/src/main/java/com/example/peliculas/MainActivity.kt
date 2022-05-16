@@ -1,36 +1,33 @@
 package com.example.peliculas
 
-import android.graphics.Paint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import coil.transform.CircleCropTransformation
-import com.example.peliculas.R.string
 import com.example.peliculas.ui.theme.PeliculasTheme
-import java.util.stream.Stream.builder
+import okhttp3.MediaType
 import androidx.compose.foundation.layout.Column as Column
 
 class MainActivity : ComponentActivity() {
@@ -43,32 +40,51 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                   MediaItem()
+                   MediaList()
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@ExperimentalCoilApi
+@Preview
 @Composable
-fun MediaItem() {
+fun MediaList() {
+    LazyColumn{
+        items(getMedia()){item->
+            MediaListItem(item)
+        }
+    }
+}
+
+
+@ExperimentalCoilApi
+//@Preview(showBackground = true)
+@Composable
+fun MediaListItem(item: MediaItem) {
     Column {
         Box(
             modifier = Modifier
                 .height(200.dp)
                 .fillMaxHeight()
-
-
         ) {
             Image(
-                painter= rememberImagePainter( data="http://via.placeholder.com/640x360",
-                builder= {
-                        transformations(CircleCropTransformation())
-                    crossfade(true)
-                }
+                painter= rememberImagePainter(
+                    data= item.thumb
                 ),
-                contentDescription = null)
+                contentDescription = null,
+            modifier= Modifier.fillMaxSize(),
+            contentScale= ContentScale.Crop
+            )
+            if (item.type == MediaItem.Type.VIDEO){
+            Icon(
+                Icons.Default.PlayCircleOutline,
+            contentDescription = null,
+            modifier= Modifier.size(92.dp).align(Alignment.Center),
+                tint = Color.White
+            )
+            }
         }
         Box(contentAlignment= Alignment.Center,
             modifier= Modifier
@@ -77,7 +93,7 @@ fun MediaItem() {
                 .padding(16.dp)
         ){
             Text(
-                text="title 1",
+                text=item.title,
                 style = MaterialTheme.typography.h6)
         }
 
