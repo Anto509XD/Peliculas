@@ -15,7 +15,7 @@ fun getMedia()=(1..10).map{
     MediaItem(
         id = it,
         title= "Title $it",
-        thumb = "https://via.placeholder.com/400",
+        thumb =  "https://loremflickr.com/400/360/$it",
         type= if(it % 3 == 0 )MediaItem.Type.VIDEO else MediaItem.Type.PHOTO
     )
 }
