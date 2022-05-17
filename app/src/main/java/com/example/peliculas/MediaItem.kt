@@ -1,7 +1,5 @@
 package com.example.peliculas
 
-import java.lang.reflect.Type
-
 data class MediaItem(
     val id:Int,
     val title:String,
